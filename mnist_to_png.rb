@@ -29,8 +29,47 @@ class MnistPNGGenerator
   end
 
   private
+  
+  def normalize val, fromLow, fromHigh, toLow, toHigh
+      (val - fromLow) * (toHigh - toLow) / (fromHigh - fromLow).to_f
+  end
 
   def extract_data_and_labels
+    n_rows = n_cols = nil
+    images = []
+    labels = []
+    Zlib::GzipReader.open(@images_file) do |f|
+      magic, n_images = f.read(8).unpack('N2')
+      raise 'This is not MNIST image file' if magic != 2051
+      n_rows, n_cols = f.read(8).unpack('N2')
+      n_images.times do
+        images << f.read(n_rows * n_cols)
+      end
+    end
+
+    Zlib::GzipReader.open(@labels_file) do |f|
+      magic, n_labels = f.read(8).unpack('N2')
+      raise 'This is not MNIST label file' if magic != 2049
+      labels = f.read(n_labels).unpack('C*')
+    end
+
+    # collate image and label data
+    @data = images.map.with_index do |image, i|
+      target = [0]*10
+      target[labels[i]] = 1
+      [image, target]
+    end
+
+    x_data, y_data = [], []
+    
+    @data.slice(0, 100).each do |row|
+      image = row[0].unpack('C*')
+      image = image.map {|v| normalize(v, 0, 256, 0, 1)}
+      x_data << image
+      y_data << row[1]
+    end
+
+    [x_data, y_data]
   end
 
   def create_white_png
