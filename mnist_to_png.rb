@@ -76,6 +76,11 @@ class MnistPNGGenerator
     return ChunkyPNG::Image.new(28,28, WHITE)
   end
 
+  def mnist_value(input)
+    # determines the label value based on an input array
+    input.index(1)
+  end
+
   def generate_image(index)
     # creates a 28 x 28 pixel png with a white background
     default_png = create_white_png
