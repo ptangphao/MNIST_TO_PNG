@@ -25,6 +25,7 @@ class MnistPNGGenerator
 
   def generate_images(num)
     # generate images for the first num items in the training set
+    @raw_data = extract_data_and_labels
     (0...num).each{|n| generate_image(n)}
   end
 
@@ -34,7 +35,7 @@ class MnistPNGGenerator
       (val - fromLow) * (toHigh - toLow) / (fromHigh - fromLow).to_f
   end
 
-  def extract_data_and_labels
+  def extract_data_and_labels(num)
     n_rows = n_cols = nil
     images = []
     labels = []
@@ -62,7 +63,7 @@ class MnistPNGGenerator
 
     x_data, y_data = [], []
     
-    @data.slice(0, 100).each do |row|
+    @data.slice(0, num).each do |row|
       image = row[0].unpack('C*')
       image = image.map {|v| normalize(v, 0, 256, 0, 1)}
       x_data << image
@@ -81,15 +82,18 @@ class MnistPNGGenerator
     input.index(1)
   end
 
-  def generate_image(index)
+  def generate_image(idx)
     # creates a 28 x 28 pixel png with a white background
     default_png = create_white_png
     # extract 
-    extracted_data = self.extract_data_and_labels
+    raw_image = @raw_data[0][idx].map{|t| ((1-t) * 255).to_i}.each_slice(28).to_a
     pixel_references = (0..27).to_a.product((0..27).to_a)
     pixel_references.each do |pixels|
-      if 
+      if raw_image[pixels.first][pixels.last] != 0
+        default_png[pixels.last][pixels.first] = ChunkyPNG::Color.grayscale(raw_image[pixels.first][pixels.last])
+      end
     end
-
+    val = mnist_value(@raw_data[1][idx])
+    default_png.save("#{idx}-#{val}.png", :interlace => true)
   end
 end
