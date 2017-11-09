@@ -19,8 +19,8 @@ The script utilizes the zlib gem to read the provided .gz files obtained from <h
 
 ### Sample Images
 
-![0 - 5.png](samples/0 - 5.png)
-![1 - 0.png](samples/1 - 0.png)
-![2 - 4.png](samples/2 - 4.png)
-![3 - 1.png](samples/3 - 1.png)
-![4 - 9.png](samples/4 - 9.png)
+![](samples/0.png)
+![](samples/1.png)
+![](samples/2.png)
+![](samples/3.png)
+![](samples/4.png)
