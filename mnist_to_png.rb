@@ -14,3 +14,14 @@ require 'chunky_png'
 
 # method that creates an image from the image format
 # utilize that method
+
+class MnistPNGGenerator
+  def initialize
+    # initialize the class using the training dataset
+    @images_file, @labels_file = 'train-images-idx3-ubyte.gz', 'train-labels-idx1-ubyte.gz'
+  end
+
+  def generate_image(num)
+    # generate images for the first num items in the training set
+  end
+end
