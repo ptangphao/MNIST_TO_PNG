@@ -24,10 +24,8 @@ class MnistPNGGenerator
   end
 
   def generate_images(num)
-
-
-
     # generate images for the first num items in the training set
+    (0...num).each{|n| generate_image(n)}
   end
 
   private
@@ -48,6 +46,6 @@ class MnistPNGGenerator
     pixel_references.each do |pixels|
       if 
     end
-    
+
   end
 end
