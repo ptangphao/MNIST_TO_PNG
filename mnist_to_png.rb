@@ -25,7 +25,7 @@ class MnistPNGGenerator
 
   def generate_images(num)
     # generate images for the first num items in the training set
-    @raw_data = extract_data_and_labels
+    @raw_data = extract_data_and_labels(num)
     (0...num).each{|n| generate_image(n)}
   end
 
@@ -97,3 +97,6 @@ class MnistPNGGenerator
     default_png.save("#{idx}-#{val}.png", :interlace => true)
   end
 end
+
+a = MnistPNGGenerator.new 
+a.generate_images(5)
