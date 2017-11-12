@@ -26,6 +26,7 @@ class MnistPNGGenerator
     n_rows = n_cols = nil
     images = []
     labels = []
+
     Zlib::GzipReader.open(@images_file) do |f|
       magic, n_images = f.read(8).unpack('N2')
       raise 'This is not MNIST image file' if magic != 2051
@@ -77,7 +78,7 @@ class MnistPNGGenerator
     pixel_references = (0..27).to_a.product((0..27).to_a)
     pixel_references.each do |pixels|
       if raw_image[pixels.first][pixels.last] != 0
-        default_png[pixels.last][pixels.first] = ChunkyPNG::Color.grayscale(raw_image[pixels.first][pixels.last])
+        default_png[pixels.last,pixels.first] = ChunkyPNG::Color.grayscale(raw_image[pixels.first][pixels.last])
       end
     end
     val = mnist_value(@raw_data[1][idx])
@@ -86,4 +87,4 @@ class MnistPNGGenerator
 end
 
 a = MnistPNGGenerator.new 
-a.generate_images(5)
+a.generate_images(10)
