@@ -13,6 +13,7 @@ class MnistPNGGenerator
     # generate images for the first num items in the training set
     @raw_data = extract_data_and_labels(num)
     (0...num).each{|n| generate_image(n)}
+    puts "First #{num} images have been created. See your directory."
   end
 
   private
