@@ -5,12 +5,10 @@ class MnistPNGGenerator
   WHITE = ChunkyPNG::Color.from_hex('#FFFFFF')
 
   def initialize
-    # initialize the class using the training dataset
     @images_file, @labels_file = 'train-images-idx3-ubyte.gz', 'train-labels-idx1-ubyte.gz'
   end
 
   def generate_images(num)
-    # generate images for the first num items in the training set
     @raw_data = extract_data_and_labels(num)
     (0...num).each{|n| generate_image(n)}
     puts "First #{num} images have been created. See your directory."
@@ -18,7 +16,7 @@ class MnistPNGGenerator
 
   private
   
-  def normalize val, fromLow, fromHigh, toLow, toHigh
+  def normalize(val, fromLow, fromHigh, toLow, toHigh)
       (val - fromLow) * (toHigh - toLow) / (fromHigh - fromLow).to_f
   end
 
@@ -42,7 +40,6 @@ class MnistPNGGenerator
       labels = f.read(n_labels).unpack('C*')
     end
 
-    # collate image and label data
     @data = images.map.with_index do |image, i|
       target = [0]*10
       target[labels[i]] = 1
@@ -66,25 +63,17 @@ class MnistPNGGenerator
   end
 
   def mnist_value(input)
-    # determines the label value based on an input array
     input.index(1)
   end
 
   def generate_image(idx)
-    # creates a 28 x 28 pixel png with a white background
     default_png = create_white_png
-    # extract 
     raw_image = @raw_data[0][idx].map{|t| ((1-t) * 255).to_i}.each_slice(28).to_a
     pixel_references = (0..27).to_a.product((0..27).to_a)
     pixel_references.each do |pixels|
-      if raw_image[pixels.first][pixels.last] != 0
         default_png[pixels.last,pixels.first] = ChunkyPNG::Color.grayscale(raw_image[pixels.first][pixels.last])
-      end
     end
     val = mnist_value(@raw_data[1][idx])
     default_png.save("#{idx}-#{val}.png", :interlace => true)
   end
 end
-
-a = MnistPNGGenerator.new 
-a.generate_images(10)
